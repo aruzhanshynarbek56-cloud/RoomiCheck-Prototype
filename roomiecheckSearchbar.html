@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roommate Matching Profiles</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            color: #333;
+            background-color: #f8f8f8;
+        }
+        .search-container {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        #roommateSearch {
+            width: 80%;
+            max-width: 600px;
+            padding: 12px 20px;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            font-size: 1.1em;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+        #roommateSearch:focus {
+            border-color: #9E1B32;
+        }
+
+        .profile-container {
+            border: 2px solid #ddd;
+            background-color: #fff;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+        h1 {
+            color: #9E1B32; /* Crimson for Dorm Name */
+            margin-bottom: 5px;
+        }
+        h2 {
+            color: #555;
+            margin-top: 0;
+            border-bottom: 1px solid #9E1B32;
+            padding-bottom: 5px;
+            display: inline-block;
+        }
+        .match-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+        }
+        .match-info > div:first-child { /* Div containing names */
+            flex-basis: 60%; /* Take more space for names */
+        }
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            align-items: center; /* Vertically align items */
+            flex-basis: 35%; /* Take less space for buttons */
+            justify-content: flex-end; /* Push buttons to the right */
+        }
+        .match-text {
+            color: #9E1B32;
+            font-size: 1.2em; /* Slightly smaller for better fit */
+            font-weight: bold;
+            white-space: nowrap; /* Prevent "80%" and "Match" from splitting */
+        }
+        .action-buttons button { /* Changed h4 to button for better accessibility */
+            margin: 0;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-size: 1.0em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-transform: uppercase;
+            border: none;
+        }
+        .confirm {
+            background-color: #4CAF50; /* Green */
+            color: white;
+        }
+        .modify {
+            background-color: #DAA520; /* Red */
+            color: white;
+        }
+        .confirm:hover { background-color: #45a049; }
+        .modify:hover { background-color: #ffe135; }
+
+        /* Style for the names (Header 3) */
+        h3 {
+            margin: 5px 0;
+            color: #333;
+            font-weight: normal;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .match-info {
+                flex-direction: column; /* Stack items vertically */
+                align-items: flex-start; /* Align names to the left */
+            }
+            .match-info > div:first-child,
+            .action-buttons {
+                flex-basis: 100%; /* Take full width */
+                justify-content: flex-start; /* Align action buttons to the left */
+            }
+            .action-buttons {
+                margin-top: 15px;
+                flex-direction: column; /* Stack buttons vertically */
+                align-items: flex-start;
+            }
+            .action-buttons button {
+                width: 100%; /* Make buttons full width */
+            }
+            .match-text {
+                margin-bottom: 10px; /* Space between match text and buttons */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="search-container">
+        <input type="text" id="roommateSearch" onkeyup="filterProfiles()" placeholder="Search for dorms, room numbers, names, or any keywords...">
+    </div>
+
+    <div class="profile-container">
+        <h1>Dorm Name: Century Hall</h1>
+        <h2>Room Number: 401A</h2>
+        <div class="match-info">
+            <div>
+                <h3>Alex Johnson</h3>
+                <h3>Maria Garcia</h3>
+                <h3>Ethan Chen</h3>
+            </div>
+            <div class="action-buttons">
+                <div class="match-text">89% Match</div>
+                <button class="confirm">Confirm</button>
+                <button class="modify">Modify</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="profile-container">
+        <h1>Dorm Name: Riverside Dorms</h1>
+        <h2>Room Number: 205B</h2>
+        <div class="match-info">
+            <div>
+                <h3>Sarah Miller</h3>
+                <h3>David Lee</h3>
+                <h3>Aisha Khan</h3>
+            </div>
+            <div class="action-buttons">
+                <div class="match-text">92% Match</div>
+                <button class="confirm">Confirm</button>
+                <button class="modify">Modify</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="profile-container">
+        <h1>Dorm Name: University Village</h1>
+        <h2>Room Number: 112C</h2>
+        <div class="match-info">
+            <div>
+                <h3>Chris Brown</h3>
+                <h3>Nicole Adams</h3>
+                <h3>Omar Hassan</h3>
+            </div>
+            <div class="action-buttons">
+                <div class="match-text">91% Match</div>
+                <button class="confirm">Confirm</button>
+                <button class="modify">Modify</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function filterProfiles() {
+            // Declare variables
+            var input, filter, profileContainers, h1, h2, h3, i, txtValue;
+            input = document.getElementById('roommateSearch');
+            filter = input.value.toUpperCase(); // Convert search query to uppercase for case-insensitive search
+            profileContainers = document.getElementsByClassName('profile-container');
+
+            // Loop through all profile containers, and hide those that don't match the search query
+            for (i = 0; i < profileContainers.length; i++) {
+                // Get all relevant text content within the current profile container
+                var textContent = profileContainers[i].textContent || profileContainers[i].innerText;
+
+                if (textContent.toUpperCase().indexOf(filter) > -1) {
+                    profileContainers[i].style.display = ""; // Show the element
+                } else {
+                    profileContainers[i].style.display = "none"; // Hide the element
+                }
+            }
+        }
+    </script>
+
+</body>
+</html>
